@@ -1,0 +1,32 @@
+# Hermes VPS — Python зависимости
+# Установить: pip install -r requirements.txt
+
+# Web automation
+playwright>=1.60
+
+# HTTP & data
+requests>=2.34
+beautifulsoup4>=4.14
+lxml>=6.1
+pandas>=2.0
+python-dotenv>=1.2
+aiohttp>=3.14
+
+# Imaging / OCR / Computer Vision
+pillow>=12.0
+opencv-python>=4.13
+pytesseract>=0.3.13
+mss>=10.0
+
+# GUI automation (Windows)
+pyautogui>=0.9.54
+pywinauto>=0.6.9 ; platform_system == "Windows"
+pywin32>=308 ; platform_system == "Windows"
+
+# Local API
+fastapi>=0.115
+uvicorn[standard]>=0.32
+pydantic>=2.0
+
+# System
+psutil>=5.9

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# Config с секретами
+config/.env
+*.pem
+*.key
+*.crt
+
+# Data
+runs/
+logs/
+screenshots/
+exports/
+chrome-debug-profile/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Setup artifacts
+ACCESS_FOR_HERMES.md
