@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Запускает Google Chrome с remote debugging port 9222.
 
@@ -54,7 +54,7 @@ if (-not (Test-Path $ProfileDir)) {
     Write-Host "[OK] Created profile dir: $ProfileDir"
 }
 
-# Проверить — не запущен ли уже
+# Проверить - не запущен ли уже
 $existing = Get-Process chrome -ErrorAction SilentlyContinue |
     Where-Object { $_.CommandLine -like "*remote-debugging-port=$Port*" }
 
@@ -74,7 +74,7 @@ if ($existing) {
 # Аргументы запуска
 $arguments = @(
     "--remote-debugging-port=$Port",
-    "--remote-debugging-address=127.0.0.1",  # только localhost — безопасность
+    "--remote-debugging-address=127.0.0.1",  # только localhost - безопасность
     "--user-data-dir=$ProfileDir",
     "--no-first-run",
     "--no-default-browser-check",

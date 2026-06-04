@@ -1,10 +1,10 @@
-<#
+﻿<#
 .SYNOPSIS
     Запускает Hermes Collector API локально (127.0.0.1:8765 по умолчанию).
 
 .DESCRIPTION
     Активирует venv и запускает collector_api.py. По умолчанию слушает
-    только localhost. Для внешнего доступа — задать HERMES_COLLECTOR_TOKEN
+    только localhost. Для внешнего доступа - задать HERMES_COLLECTOR_TOKEN
     и COLLECTOR_HOST=0.0.0.0 в config/.env.
 
 .PARAMETER Background

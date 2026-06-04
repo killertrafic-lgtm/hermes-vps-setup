@@ -1,6 +1,6 @@
-<#
+﻿<#
 .SYNOPSIS
-    Hermes VPS Setup — главный скрипт инициализации.
+    Hermes VPS Setup - главный скрипт инициализации.
 
 .DESCRIPTION
     Подготавливает Windows VPS для управления через Hermes Agent:
@@ -29,7 +29,7 @@
     Не устанавливать OpenSSH Server (если уже установлен / не нужен).
 
 .PARAMETER NonInteractive
-    Не задавать вопросы — для CI. Эквивалентно SkipUserCreation + SkipSSH-key.
+    Не задавать вопросы - для CI. Эквивалентно SkipUserCreation + SkipSSH-key.
 
 .EXAMPLE
     # Стандартный запуск (от Administrator):
@@ -55,7 +55,7 @@ $global:ProgressPreference = "SilentlyContinue"  # ускоряет Invoke-WebRe
 # =============================================================================
 Write-Host ""
 Write-Host "===============================================" -ForegroundColor Cyan
-Write-Host " Hermes VPS Setup — Bootstrap                  " -ForegroundColor Cyan
+Write-Host " Hermes VPS Setup - Bootstrap                  " -ForegroundColor Cyan
 Write-Host "===============================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -127,7 +127,7 @@ Write-Host "[3/9] Setting up Python venv..." -ForegroundColor Cyan
 $venvPath = Join-Path $ProjectRoot ".venv"
 $pythonExe = Join-Path $venvPath "Scripts\python.exe"
 
-# Если venv нет — создать
+# Если venv нет - создать
 if (-not (Test-Path $pythonExe)) {
     Write-Host "  venv not found, creating..."
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
@@ -192,7 +192,7 @@ if (-not $SkipSSH) {
         Write-Host "  Firewall rule for TCP 22 already exists"
     }
 
-    # Default shell — PowerShell (удобнее чем cmd для скриптов)
+    # Default shell - PowerShell (удобнее чем cmd для скриптов)
     $shellKey = "HKLM:\SOFTWARE\OpenSSH"
     if (-not (Test-Path $shellKey)) {
         New-Item -Path $shellKey -Force | Out-Null
@@ -239,7 +239,7 @@ if (-not $SkipUserCreation -and -not $NonInteractive) {
                 Write-Host "  [OK] User '$hermesUser' created" -ForegroundColor Green
                 $userCreated = $true
 
-                # Спросить — добавлять ли в Administrators
+                # Спросить - добавлять ли в Administrators
                 Write-Host ""
                 Write-Host "  Add '$hermesUser' to Administrators group? (admin needed for full automation)"
                 $addAdmin = Read-Host "  Add to Administrators? [y/N]"
@@ -300,7 +300,7 @@ if (-not $SkipSSH -and -not $NonInteractive) {
             }
             Add-Content -Path $keysFile -Value $pubKey -Encoding ASCII
 
-            # ACL — критически важно для OpenSSH on Windows
+            # ACL - критически важно для OpenSSH on Windows
             icacls $keysFile /inheritance:r | Out-Null
             if ($isAdminUser) {
                 icacls $keysFile /grant "Administrators:F" "SYSTEM:F" | Out-Null
@@ -420,7 +420,7 @@ Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 - **SSH port:** 22
 - **SSH username (Hermes):** $hermesUser
 - **SSH username (fallback):** Administrator
-- **Password:** NOT STORED IN FILES — ask user separately
+- **Password:** NOT STORED IN FILES - ask user separately
 - **Key auth:** $(if ($sshKeyAdded) {"yes (configured)"} else {"no (password only)"})
 - **Test connection:** ``ssh ${hermesUser}@${publicIp}``
 
@@ -472,7 +472,7 @@ python scripts\list_windows.py
 python scripts\chrome_debug_check.py
 \`\`\`
 
-## Hermes Agent — how to connect
+## Hermes Agent - how to connect
 
 ### Option A: SSH (recommended)
 \`\`\`bash
@@ -488,29 +488,29 @@ cd C:\product-research-agent
 # Health (no auth):
 curl http://${publicIp}:8765/health
 
-# Полная диагностика (если auth enabled — добавить -H "Authorization: Bearer <token>"):
+# Полная диагностика (если auth enabled - добавить -H "Authorization: Bearer <token>"):
 curl http://127.0.0.1:8765/run-checks -X POST -H "Content-Type: application/json" -d '{}'
 
 # Скриншот:
 curl http://127.0.0.1:8765/screenshot -X POST -o screen.png
 \`\`\`
 
-⚠️ API по умолчанию только на 127.0.0.1. Для external access — задать токен в config\.env и поменять ``COLLECTOR_HOST=0.0.0.0``.
+⚠️ API по умолчанию только на 127.0.0.1. Для external access - задать токен в config\.env и поменять ``COLLECTOR_HOST=0.0.0.0``.
 
 ## Blockers (что Hermes пока НЕ может)
 
-1. **Screenshot из SSH-сессии может вернуть чёрный экран** — Windows Session Isolation. Workaround: запускать collector_api через Scheduled Task в interactive session пользователя (Run only when user is logged on).
-2. **WhiteTools Browser sandbox** — нельзя запустить с --remote-debugging-port, это защищённый Chromium. Workaround: использовать отдельный Chrome через ``launch_chrome_debug.ps1``.
-3. **AdHeart авторизация** — требует ручной login через WhiteTools. Workaround: сохранить cookies из WhiteTools profile и подгружать их в Playwright Chromium.
-4. **2FA / captchas** — manual action required.
+1. **Screenshot из SSH-сессии может вернуть чёрный экран** - Windows Session Isolation. Workaround: запускать collector_api через Scheduled Task в interactive session пользователя (Run only when user is logged on).
+2. **WhiteTools Browser sandbox** - нельзя запустить с --remote-debugging-port, это защищённый Chromium. Workaround: использовать отдельный Chrome через ``launch_chrome_debug.ps1``.
+3. **AdHeart авторизация** - требует ручной login через WhiteTools. Workaround: сохранить cookies из WhiteTools profile и подгружать их в Playwright Chromium.
+4. **2FA / captchas** - manual action required.
 
 ## Next recommended step
 
 1. **Hermes:** подключиться по SSH к $publicIp как $hermesUser
-2. **Hermes:** запустить ``python scripts\check_environment.py`` — получить JSON отчёт
-3. **Hermes:** запустить ``powershell scripts\start_collector_api.ps1 -Background`` — поднять API
+2. **Hermes:** запустить ``python scripts\check_environment.py`` - получить JSON отчёт
+3. **Hermes:** запустить ``powershell scripts\start_collector_api.ps1 -Background`` - поднять API
 4. **Hermes:** опросить API через ``curl http://127.0.0.1:8765/run-checks -X POST``
-5. **Hermes:** на основе env-данных решить — DOM scraping через Chrome CDP / OCR через Tesseract / hybrid
+5. **Hermes:** на основе env-данных решить - DOM scraping через Chrome CDP / OCR через Tesseract / hybrid
 
 ---
 *Auto-generated by bootstrap.ps1. Re-run to refresh.*
@@ -525,7 +525,7 @@ Write-Host ""
 # =============================================================================
 Write-Host ""
 Write-Host "===============================================" -ForegroundColor Green
-Write-Host " Hermes VPS Setup — DONE                       " -ForegroundColor Green
+Write-Host " Hermes VPS Setup - DONE                       " -ForegroundColor Green
 Write-Host "===============================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "Public IP:       $publicIp"

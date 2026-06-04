@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Добавляет SSH публичный ключ для пользователя hermes_worker (или другого).
 
@@ -7,14 +7,14 @@
     Administrators ключи кладутся в C:\ProgramData\ssh\administrators_authorized_keys
     (не в личный ~/.ssh/authorized_keys).
 
-    Для обычных пользователей — в их $env:USERPROFILE\.ssh\authorized_keys.
+    Для обычных пользователей - в их $env:USERPROFILE\.ssh\authorized_keys.
 
 .PARAMETER Username
     Имя пользователя (по умолчанию hermes_worker).
 
 .PARAMETER PublicKey
     Текст публичного ключа (строка starting with ssh-rsa, ssh-ed25519 etc).
-    Если не передан — будет запрошен интерактивно.
+    Если не передан - будет запрошен интерактивно.
 
 .PARAMETER DisablePasswordAuth
     Если указан, после добавления ключа отключит парольную авторизацию.
@@ -55,7 +55,7 @@ $isAdmin = (Get-LocalGroupMember -Group "Administrators" -ErrorAction SilentlyCo
     Where-Object { $_.Name -like "*\$Username" }) -ne $null
 
 if ($isAdmin) {
-    # Admin → administrators_authorized_keys
+    # Admin -> administrators_authorized_keys
     $keysFile = "C:\ProgramData\ssh\administrators_authorized_keys"
     Write-Host "[INFO] $Username is Administrator, using $keysFile" -ForegroundColor Cyan
 
@@ -64,7 +64,7 @@ if ($isAdmin) {
         New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
     }
 } else {
-    # Standard user → личная папка
+    # Standard user -> личная папка
     $userProfile = "C:\Users\$Username"
     if (-not (Test-Path $userProfile)) {
         Write-Host "[WARN] $userProfile does not exist. User must log in once first to create profile." -ForegroundColor Yellow
@@ -103,7 +103,7 @@ if ($isAdmin) {
     icacls $keysFile /grant "${Username}:F" "SYSTEM:F" | Out-Null
 }
 
-# Для папки .ssh — те же правила
+# Для папки .ssh - те же правила
 icacls $sshDir /inheritance:r | Out-Null
 if ($isAdmin) {
     icacls $sshDir /grant "Administrators:F" "SYSTEM:F" | Out-Null
@@ -113,7 +113,7 @@ if ($isAdmin) {
 
 Write-Host "[OK] ACL set" -ForegroundColor Green
 
-# Опционально — отключить парольный вход
+# Опционально - отключить парольный вход
 if ($DisablePasswordAuth) {
     $sshdConfig = "C:\ProgramData\ssh\sshd_config"
     if (Test-Path $sshdConfig) {
