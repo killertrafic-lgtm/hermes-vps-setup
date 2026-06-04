@@ -2,21 +2,18 @@
 """
 list_windows.py
 Список открытых окон на Desktop с фокусом на Chrome / WhiteTools / AdHeart.
-
-Стратегия:
-1. Сначала пробуем через win32gui (через pywin32 если есть) — самый надёжный
-2. Fallback на PowerShell Get-Process с MainWindowTitle
-3. Сохраняем JSON в logs/windows.json
-
-LIMITATION: список окон видит только Session текущего пользователя.
-Из Session 0 (SSH non-interactive) увидит только Session 0 окна.
 """
 import sys
+import io
 import os
 import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
+# Force UTF-8 stdout (Windows console defaults to cp1252)
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 PROJECT_ROOT = Path(r"C:\product-research-agent")
 LOGS_DIR = PROJECT_ROOT / "logs"

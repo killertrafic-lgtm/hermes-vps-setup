@@ -5,6 +5,7 @@ check_environment.py
 Выводит JSON-результат в stdout, дублирует в logs/check_environment.json.
 """
 import sys
+import io
 import os
 import json
 import platform
@@ -12,6 +13,10 @@ import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
+# Force UTF-8 stdout (Windows console defaults to cp1252)
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 REQUIRED_PACKAGES = [
     "playwright",

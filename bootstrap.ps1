@@ -235,7 +235,7 @@ if (-not $SkipUserCreation -and -not $NonInteractive) {
             try {
                 New-LocalUser -Name $hermesUser -Password $pwd `
                     -PasswordNeverExpires -AccountNeverExpires `
-                    -Description "Hermes Agent worker (auto-created by bootstrap.ps1)" | Out-Null
+                    -Description "Hermes Agent worker" | Out-Null
                 Write-Host "  [OK] User '$hermesUser' created" -ForegroundColor Green
                 $userCreated = $true
 
@@ -391,8 +391,8 @@ $hostname = $env:COMPUTERNAME
 $os = (Get-CimInstance Win32_OperatingSystem).Caption
 $tz = (Get-TimeZone).Id
 $pyVer = & $pythonExe --version 2>&1
-$nodeVer = (try { (& node --version 2>&1) } catch { "not found" })
-$gitVer = (try { (& git --version 2>&1) } catch { "not found" })
+try { $nodeVer = (& node --version 2>&1) } catch { $nodeVer = "not found" }
+try { $gitVer = (& git --version 2>&1) } catch { $gitVer = "not found" }
 $sshdStatus = (Get-Service sshd -ErrorAction SilentlyContinue).Status
 $rdpEnabled = (Get-ItemProperty "HKLM:\System\CurrentControlSet\Control\Terminal Server" `
     -Name fDenyTSConnections -ErrorAction SilentlyContinue).fDenyTSConnections -eq 0

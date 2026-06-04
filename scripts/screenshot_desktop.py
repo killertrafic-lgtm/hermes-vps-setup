@@ -12,10 +12,15 @@ Workaround: запускать collector_api как Scheduled Task с
 "Run only when user is logged on" → API будет в Session 1.
 """
 import sys
+import io
 import os
 import json
 from datetime import datetime
 from pathlib import Path
+
+# Force UTF-8 stdout (Windows console defaults to cp1252)
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 try:
     import mss
